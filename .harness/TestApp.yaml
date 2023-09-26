@@ -1,0 +1,37 @@
+pipeline:
+  name: TestApp
+  identifier: TestApp
+  projectIdentifier: EBQ
+  orgIdentifier: Customer_Technology
+  tags: {}
+  properties:
+    ci:
+      codebase:
+        connectorRef: TestAPp
+        build: <+input>
+  stages:
+    - stage:
+        name: DockerBuild_test
+        identifier: DockerBuild_test
+        type: CI
+        spec:
+          cloneCodebase: true
+          infrastructure:
+            type: KubernetesDirect
+            spec:
+              connectorRef: account.k8scustomertechnologyci
+              namespace: customertechnology
+              automountServiceAccountToken: true
+              nodeSelector: {}
+              os: Linux
+          execution:
+            steps:
+              - step:
+                  type: BuildAndPushDockerRegistry
+                  name: BuildAndPushDockerRegistry_1
+                  identifier: BuildAndPushDockerRegistry_1
+                  spec:
+                    connectorRef: TestApp_DockerConnector
+                    repo: raqimsaifi/harness_test
+                    tags:
+                      - TestApp
